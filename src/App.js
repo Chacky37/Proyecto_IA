@@ -5,8 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./lib/Screens/Navbar";
 import Home from "./lib/Screens/Seleccion/Home";
 import Templates from "./lib/Screens/Templates";
-import Main_Entrenamiento from "./lib/Screens/Entrenamiento/MainEntrenamiento";
-import Main_Simulacion from "./lib/Screens/Simulacion/MainSimulacion";
+import MainEntrenamiento from "./lib/Screens/Entrenamiento/MainEntrenamiento";
+import MainSimulacion from "./lib/Screens/Simulacion/MainSimulacion";
 import ScrollToTop from "./lib/Components/ScrollToTop";
 
 // 🧩 Contextos globales
