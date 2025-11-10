@@ -31,7 +31,7 @@ export function useEvaluarRBF() {
       const salidaCol =
         columnas.find((c) => /yd|salida|output/i.test(c)) ||
         columnas[columnas.length - 1];
-      const entradaCols = columnas.filter((c) => c !== salidaCol);
+     
 
       // 🔹 Extraemos Yd
       const Yd = dataset.map((row) => parseFloat(row[salidaCol]));
