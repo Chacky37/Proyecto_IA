@@ -1,6 +1,5 @@
 // src/lib/Screens/Simulacion/Main_Simulacion.jsx
 import React, { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
