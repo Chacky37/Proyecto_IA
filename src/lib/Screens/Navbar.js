@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import logo from "../../lib/Images/logo.png";
 
 export default function Navbar() {
+  console.log("🔄 Render Navbar");
+
   return (
     <nav style={styles.navbar}>
       <div style={styles.logoContainer}>
@@ -12,8 +14,8 @@ export default function Navbar() {
 
       <div style={styles.links}>
         <Link to="/" style={styles.link}>Seleccion</Link>
-        <Link to="/Main_Entrenamiento" style={styles.link}>Entrenamiento</Link>
-        <Link to="/Main_Simulacion" style={styles.link}>Simulacion</Link>
+        <Link to="/MainEntrenamiento" style={styles.link}>Entrenamiento</Link>
+        <Link to="/MainSimulacion" style={styles.link}>Simulacion</Link>
         <Link to="/templates" style={styles.link}>Templates</Link>
       </div>
     </nav>

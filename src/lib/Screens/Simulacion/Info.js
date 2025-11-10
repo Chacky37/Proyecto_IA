@@ -12,7 +12,6 @@ export default function Info({ eg, mae, rmse, converge }) {
       rmse !== undefined &&
       converge !== undefined
     ) {
-      console.log("Prop:", { eg, mae, rmse, converge });
       //updateMetrics({ eg, mae, rmse, converge });
     }
   }, [eg, mae, rmse, converge, ]);

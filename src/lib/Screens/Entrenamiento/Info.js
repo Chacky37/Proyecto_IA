@@ -1,19 +1,20 @@
-import React, { useEffect } from "react";
-import { useMetrics } from "../../../Context/MetricsContext"; // ✅ importar correctamente
+import React, { useEffect, useRef } from "react";
+import { useMetrics } from "../../../Context/MetricsContext";
 
 export default function BottomRight2({ eg, mae, rmse, converge }) {
-  const { updateMetrics } = useMetrics(); // ✅ usamos la función correcta
+  const { updateMetrics } = useMetrics();
+  const prev = useRef({ eg: null, mae: null, rmse: null, converge: null });
 
-  // ✅ Cada vez que cambien los props, actualiza el contexto global
   useEffect(() => {
+    // ✅ Solo actualiza si los valores realmente cambiaron
     if (
-      eg !== undefined &&
-      mae !== undefined &&
-      rmse !== undefined &&
-      converge !== undefined
+      eg !== prev.current.eg ||
+      mae !== prev.current.mae ||
+      rmse !== prev.current.rmse ||
+      converge !== prev.current.converge
     ) {
-      console.log("Prop:", { eg, mae, rmse, converge });
       updateMetrics({ eg, mae, rmse, converge });
+      prev.current = { eg, mae, rmse, converge };
     }
   }, [eg, mae, rmse, converge, updateMetrics]);
 
@@ -32,7 +33,6 @@ export default function BottomRight2({ eg, mae, rmse, converge }) {
           </span>
         </p>
       </div>
-
     </div>
   );
 }
