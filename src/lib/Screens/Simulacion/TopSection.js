@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useEvaluarRBF } from "../../Controllers/Simular_RBF";
-import { useEvaluarRBF_Patron } from "../../Controllers/Simular_RBF"; // ✅ corregido import
+import { useEvaluarRBF } from "../../Controllers/SimularRBF";
+import { useEvaluarRBF_Patron } from "../../Controllers/SimularRBF"; // ✅ corregido import
 import { useDataset } from "../../../Context/DatasetContext";
 import MessageBox from "../../Components/MessageBox";
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { entrenarRBF } from "../../Controllers/Entrenar_RBF";
+import { entrenarRBF } from "../../Controllers/EntrenarRBF";
 import { useDataset } from "../../../Context/DatasetContext";
 import MessageBox from "../../Components/MessageBox";
 import { useRBF } from "../../../Context/RBFContext";

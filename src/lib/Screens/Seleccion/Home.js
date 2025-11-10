@@ -1,5 +1,5 @@
 import GoogleDrivePicker from "./JsonUploader";
-import Base_Radiales from "../../../lib/Images/Base_Radiales.png"; // usa tu imagen
+import Base_Radiales from "../../../lib/Images/BaseRadiales.png"; // usa tu imagen
 
 export default function Home() {
   return (

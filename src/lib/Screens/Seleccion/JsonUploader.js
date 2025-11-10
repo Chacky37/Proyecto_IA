@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import useDrivePicker from "react-google-drive-picker";
 import { useNavigate } from "react-router-dom";
-import { analizarDataset } from "../../Controllers/Analisis_Dataset";
+import { analizarDataset } from "../../Controllers/AnalisisDataset";
 import { useDataset } from "../../../Context/DatasetContext"; // ✅ contexto global
 import { useSubset } from "../../../Context/SubsetContext"; // ✅ nuevo impor
 

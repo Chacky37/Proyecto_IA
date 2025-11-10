@@ -5,10 +5,10 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
 import TopSectionSimulacion from "./TopSection";
-import BottomRight from "./Grafica_YdvsYr";
+import BottomRight from "./GraficaYdvsYr";
 import BottomRight2 from "./Info";
-import GraficaError from "./Grafica_Error";
-import GraficaDisper from "./Grafica_Disper";
+import GraficaError from "./GraficaError";
+import GraficaDisper from "./GraficaDisper";
 
 export default function Main_Simulacion() {
   const navigate = useNavigate();
