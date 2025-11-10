@@ -10,7 +10,7 @@ import BottomRight2 from "./Info";
 import GraficaError from "./GraficaError";
 import GraficaDisper from "./GraficaDisper";
 
-export default function Main_Simulacion() {
+export default function MainSimulacion() {
   const navigate = useNavigate();
   const contentRef = useRef();
 
