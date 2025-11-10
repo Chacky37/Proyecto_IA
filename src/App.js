@@ -29,8 +29,8 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/templates" element={<Templates />} />
-                  <Route path="/MainEntrenamiento" element={<Main_Entrenamiento />} />
-                  <Route path="/MainSimulacion" element={<Main_Simulacion />} />
+                  <Route path="/MainEntrenamiento" element={<MainEntrenamiento />} />
+                  <Route path="/MainSimulacion" element={<MainSimulacion />} />
                 </Routes>
               </div>
             </MetricsProvider>
