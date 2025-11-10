@@ -11,7 +11,6 @@ import GraficaError from "./GraficaError";
 import GraficaDisper from "./GraficaDisper";
 
 export default function MainSimulacion() {
-  const navigate = useNavigate();
   const contentRef = useRef();
 
   const [salidas, setSalidas] = useState([]);
