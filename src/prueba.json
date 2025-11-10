@@ -1,0 +1,74 @@
+[
+    {
+        "Peso_kg": 525,
+        "Edad_meses": 33,
+        "Consumo_Concentrado_kg": 4.3,
+        "Produccion_Leche_LitrosDia": 14.47
+    },
+    {
+        "Peso_kg": 545,
+        "Edad_meses": 34,
+        "Consumo_Concentrado_kg": 4.5,
+        "Produccion_Leche_LitrosDia": 14.97
+    },
+    {
+        "Peso_kg": 355,
+        "Edad_meses": 20,
+        "Consumo_Concentrado_kg": 1.8,
+        "Produccion_Leche_LitrosDia": 8.62
+    },
+    {
+        "Peso_kg": 380,
+        "Edad_meses": 22,
+        "Consumo_Concentrado_kg": 2.1,
+        "Produccion_Leche_LitrosDia": 9.35
+    },
+    {
+        "Peso_kg": 400,
+        "Edad_meses": 23,
+        "Consumo_Concentrado_kg": 2.4,
+        "Produccion_Leche_LitrosDia": 10.05
+    },
+    {
+        "Peso_kg": 420,
+        "Edad_meses": 25,
+        "Consumo_Concentrado_kg": 2.6,
+        "Produccion_Leche_LitrosDia": 10.55
+    },
+    {
+        "Peso_kg": 440,
+        "Edad_meses": 27,
+        "Consumo_Concentrado_kg": 2.9,
+        "Produccion_Leche_LitrosDia": 11.25
+    },
+    {
+        "Peso_kg": 460,
+        "Edad_meses": 28,
+        "Consumo_Concentrado_kg": 3.2,
+        "Produccion_Leche_LitrosDia": 11.95
+    },
+    {
+        "Peso_kg": 480,
+        "Edad_meses": 30,
+        "Consumo_Concentrado_kg": 3.5,
+        "Produccion_Leche_LitrosDia": 12.65
+    },
+    {
+        "Peso_kg": 500,
+        "Edad_meses": 32,
+        "Consumo_Concentrado_kg": 3.8,
+        "Produccion_Leche_LitrosDia": 13.35
+    },
+    {
+        "Peso_kg": 520,
+        "Edad_meses": 33,
+        "Consumo_Concentrado_kg": 4.1,
+        "Produccion_Leche_LitrosDia": 14.05
+    },
+    {
+        "Peso_kg": 540,
+        "Edad_meses": 35,
+        "Consumo_Concentrado_kg": 4.4,
+        "Produccion_Leche_LitrosDia": 14.75
+    }
+]
