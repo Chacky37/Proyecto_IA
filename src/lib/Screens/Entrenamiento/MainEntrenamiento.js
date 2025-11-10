@@ -35,7 +35,7 @@ export default function MainLayout() {
 
   const handleGuardar = () => {
     console.log("Datos guardados:", { detalles, salidas, eg, mae, rmse });
-    navigate("/Main_Simulacion");
+    navigate("/MainSimulacion");
   };
 
   // 📸 Generar captura y exportar PDF

@@ -81,7 +81,7 @@ export default function GoogleDrivePicker({ onDatasetInfo }) {
   // 🧭 Botón “Siguiente”
   const handleSiguiente = () => {
     if (!datasetProcesado) return;
-    navigate("/Main_Entrenamiento");
+    navigate("/MainEntrenamiento");
   };
   // 🧾 Tabla
   const renderTable = (data) => {

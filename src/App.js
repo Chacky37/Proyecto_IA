@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./lib/Screens/Navbar";
 import Home from "./lib/Screens/Seleccion/Home";
 import Templates from "./lib/Screens/Templates";
-import MainEntrenamiento from "./lib/Screens/Entrenamiento/MainEntrenamiento";
+import MainLayout from "./lib/Screens/Entrenamiento/MainEntrenamiento";
 import MainSimulacion from "./lib/Screens/Simulacion/MainSimulacion";
 import ScrollToTop from "./lib/Components/ScrollToTop";
 
@@ -29,7 +29,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/templates" element={<Templates />} />
-                  <Route path="/MainEntrenamiento" element={<MainEntrenamiento />} />
+                  <Route path="/MainEntrenamiento" element={<MainLayout />} />
                   <Route path="/MainSimulacion" element={<MainSimulacion />} />
                 </Routes>
               </div>
