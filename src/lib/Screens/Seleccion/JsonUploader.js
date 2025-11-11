@@ -2,18 +2,27 @@ import React, { useEffect, useState } from "react";
 import useDrivePicker from "react-google-drive-picker";
 import { useNavigate } from "react-router-dom";
 import { analizarDataset } from "../../Controllers/AnalisisDataset";
-import { useDataset } from "../../../Context/DatasetContext"; // ✅ contexto global
-import { useSubset } from "../../../Context/SubsetContext"; // ✅ nuevo impor
+import { useDataset } from "../../../Context/DatasetContext";
+import { useSubset } from "../../../Context/SubsetContext";
 
 export default function GoogleDrivePicker({ onDatasetInfo }) {
   const [openPicker, authResponse] = useDrivePicker();
   const [datasetProcesado, setDatasetProcesado] = useState(null);
   const [fileName, setFileName] = useState("");
+  const [googleToken, setGoogleToken] = useState(localStorage.getItem("google_token") || null);
   const navigate = useNavigate();
-  const { guardarDataset } = useDataset(); // ✅ aquí
-  const { guardarSubset  } = useSubset(); // ✅ usamos el contexto del subset 20%
+  const { guardarDataset } = useDataset();
+  const { guardarSubset } = useSubset();
 
-  // ✅ Cargar dataset guardado al montar el componente
+  // ✅ Guardar token automáticamente cuando se obtenga por primera vez
+  useEffect(() => {
+    if (authResponse?.access_token) {
+      localStorage.setItem("google_token", authResponse.access_token);
+      setGoogleToken(authResponse.access_token);
+    }
+  }, [authResponse]);
+
+  // ✅ Cargar dataset guardado
   useEffect(() => {
     const saved = localStorage.getItem("datasetProcesado");
     const savedName = localStorage.getItem("datasetFileName");
@@ -30,13 +39,37 @@ export default function GoogleDrivePicker({ onDatasetInfo }) {
     }
   }, [onDatasetInfo]);
 
-  // 📂 Abrir selector de Google Drive
-  const handleOpenPicker = () => {
+  // ✅ Iniciar sesión automáticamente si no hay token
+  const handleLoginGoogle = () => {
     openPicker({
       clientId: "347987211299-iagoggoejqg5qttuv67aeko35k29melv.apps.googleusercontent.com",
       developerKey: "AIzaSyCjaBLF33iA0LqJuPmF-UUCp1cEu8ZCkr4",
       viewId: "DOCS",
-      token: authResponse?.access_token,
+      showUploadView: false,
+      showUploadFolders: false,
+      supportDrives: true,
+      multiselect: false,
+      // Esta llamada simplemente abrirá el picker y pedirá permiso
+      callbackFunction: () => {},
+    });
+  };
+
+  // 📂 Seleccionar archivo desde Drive
+  const handleOpenPicker = () => {
+    const token = googleToken || authResponse?.access_token;
+
+    if (!token) {
+      alert("🔐 Debes iniciar sesión con Google antes de abrir el selector.");
+      handleLoginGoogle(); // abrir login automáticamente
+      return;
+    }
+
+    openPicker({
+      clientId:
+        "347987211299-iagoggoejqg5qttuv67aeko35k29melv.apps.googleusercontent.com",
+      developerKey: "AIzaSyCjaBLF33iA0LqJuPmF-UUCp1cEu8ZCkr4",
+      viewId: "DOCS",
+      token,
       showUploadView: true,
       showUploadFolders: true,
       supportDrives: true,
@@ -49,8 +82,9 @@ export default function GoogleDrivePicker({ onDatasetInfo }) {
 
           try {
             const response = await fetch(downloadUrl, {
-              headers: { Authorization: `Bearer ${authResponse.access_token}` },
+              headers: { Authorization: `Bearer ${token}` },
             });
+
             const jsonData = await response.json();
 
             if (!Array.isArray(jsonData)) {
@@ -83,6 +117,7 @@ export default function GoogleDrivePicker({ onDatasetInfo }) {
     if (!datasetProcesado) return;
     navigate("/MainEntrenamiento");
   };
+
   // 🧾 Tabla
   const renderTable = (data) => {
     if (!data || data.length === 0) return <p>No hay datos para mostrar.</p>;
@@ -120,9 +155,15 @@ export default function GoogleDrivePicker({ onDatasetInfo }) {
     <div style={styles.container}>
       <h3>Cargar archivo JSON desde Google Drive ☁️</h3>
 
-      <button style={styles.button} onClick={handleOpenPicker}>
-        Seleccionar desde Drive
-      </button>
+      {!googleToken ? (
+        <button style={styles.loginButton} onClick={handleLoginGoogle}>
+          Iniciar sesión con Google 🔐
+        </button>
+      ) : (
+        <button style={styles.button} onClick={handleOpenPicker}>
+          Seleccionar desde Drive
+        </button>
+      )}
 
       {datasetProcesado && (
         <div style={{ marginTop: 20, width: "100%" }}>
@@ -147,7 +188,7 @@ export default function GoogleDrivePicker({ onDatasetInfo }) {
 // 🎨 Estilos
 const styles = {
   container: {
-    background: "#007282",
+background: "linear-gradient(90deg, #00796B 0%, #00BFA5 100%)",
     color: "#fff",
     padding: "20px",
     borderRadius: "10px",
@@ -158,23 +199,35 @@ const styles = {
   },
   button: {
     backgroundColor: "#2BD8FF",
+    color: "#fff",
     border: "none",
     borderRadius: "5px",
     padding: "10px 15px",
     cursor: "pointer",
     fontWeight: "bold",
   },
-  nextButton: {
-    marginTop: "20px",
-    backgroundColor: "#fff",
+  loginButton: {
+    backgroundColor: "#2BD8FF",
     border: "none",
-    borderRadius: "8px",
-    color: "#007282",
-    padding: "12px 20px",
-    fontSize: "16px",
+    borderRadius: "5px",
+    padding: "10px 15px",
     cursor: "pointer",
-    transition: "background 0.3s",
+    fontWeight: "bold",
+    color: "#000",
   },
+nextButton: {
+  marginTop: "20px",
+  backgroundColor: "#fff",
+  border: "none",
+  borderRadius: "8px",
+  color: "#007282",
+  padding: "12px 20px",
+  fontSize: "16px",
+  fontWeight: "bold",
+  cursor: "pointer",
+  transition: "background 0.3s",
+},
+
   tableContainer: {
     marginTop: "20px",
     overflowX: "auto",
@@ -191,16 +244,17 @@ const styles = {
     borderCollapse: "collapse",
     fontSize: "14px",
   },
-  th: {
-    backgroundColor: "#007282",
-    color: "white",
-    padding: "10px",
-    textAlign: "left",
-    borderBottom: "2px solid #2BD8FF",
-    position: "sticky",
-    top: 0,
-    zIndex: 2,
-  },
+th: {
+  background: "linear-gradient(90deg, #00796B 100%)",
+  color: "white",
+  padding: "10px",
+  textAlign: "left",
+  borderBottom: "2px solid #2BD8FF",
+  position: "sticky",
+  top: 0,
+  zIndex: 2,
+},
+
   td: {
     borderBottom: "1px solid #ccc",
     padding: "8px",

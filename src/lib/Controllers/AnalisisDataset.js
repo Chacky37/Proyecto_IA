@@ -33,77 +33,53 @@ export function analizarDataset(jsonData, guardarSubset) {
     columnasNumericas.forEach((col) => (limpio[col] = Number(row[col])));
     return limpio;
   });
-// 💾 Si se pasa guardarSubset desde el contexto, guardar el 20%
-let registroExitoso = false;
 
-if (typeof guardarSubset === "function") {
-  try {
-    const subsetLimpioPrueba = subsetPrueba.map((row) => {
-      const limpio = {};
-      columnasNumericas.forEach((col) => (limpio[col] = Number(row[col])));
-      return limpio;
-    });
+  // 💾 Si se pasa guardarSubset desde el contexto, guardar el 20%
+  let registroExitoso = false;
 
-    guardarSubset(subsetLimpioPrueba, {
-      columnasNumericas,
-      columnasEliminadas,
-      total,
-      porcentaje: "20%",
-    });
+  if (typeof guardarSubset === "function") {
+    try {
+      const subsetLimpioPrueba = subsetPrueba.map((row) => {
+        const limpio = {};
+        columnasNumericas.forEach((col) => (limpio[col] = Number(row[col])));
+        return limpio;
+      });
 
-    // ✅ Verificar si se guardó correctamente en localStorage
-    const stored = localStorage.getItem("subset20");
-    if (stored) registroExitoso = true;
-  } catch (error) {
-    console.error("❌ Error al guardar el subset:", error);
-    registroExitoso = false;
+      guardarSubset(subsetLimpioPrueba, {
+        columnasNumericas,
+        columnasEliminadas,
+        total,
+        porcentaje: "20%",
+      });
+
+      // ✅ Verificar si se guardó correctamente en localStorage
+      const stored = localStorage.getItem("subset20");
+      if (stored) registroExitoso = true;
+    } catch (error) {
+      console.error("❌ Error al guardar el subset:", error);
+      registroExitoso = false;
+    }
   }
-}
 
-if (registroExitoso) {
-  console.log("✅ Subset guardado exitosamente");
-} else {
-  console.warn("⚠️ No se pudo guardar el subset");
-}
-
+  if (registroExitoso) {
+    console.log("✅ Subset (20%) guardado exitosamente");
+  } else {
+    console.warn("⚠️ No se pudo guardar el subset");
+  }
 
   // 🧮 Cálculos de estructura
   const entradas = columnasNumericas.length - 1;
   const salidas = 1;
   const patrones = subset.length;
 
-  // 📄 Crear reporte
-  const reporte = `
- -----------------------------------------
-    📊 REPORTE DE ANÁLISIS DE DATASET
-------------------------------------------
-📁 Total de registros originales: ${total}
-📉 Registros usados (80%): ${patrones}
-📈 Registros de prueba (20%): ${subsetPrueba.length}
-
-📌 Columnas originales (${columnas.length}):
-${columnas.join(", ")}
-
-✅ Columnas numéricas usadas (${columnasNumericas.length}):
-${columnasNumericas.join(", ")}
-
-❌ Columnas eliminadas (${columnasEliminadas.length}):
-${columnasEliminadas.length > 0 ? columnasEliminadas.join(", ") : "Ninguna"}
-
-🔢 Entradas: ${entradas}
-🎯 Salidas: ${salidas}
-`;
-
-  // 💾 Crear archivo descargable
-  const blob = new Blob([reporte], { type: "text/plain;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "reporte_dataset.txt";
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-
-  return { entradas, salidas, patrones, subset };
+  // 📤 Retornar resultado final
+  return {
+    entradas,
+    salidas,
+    patrones,
+    subset,
+    columnasNumericas,
+    columnasEliminadas,
+    total,
+  };
 }
