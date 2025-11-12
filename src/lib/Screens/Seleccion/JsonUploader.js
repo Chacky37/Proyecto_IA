@@ -14,6 +14,28 @@ export default function GoogleDrivePicker({ onDatasetInfo }) {
   const { guardarDataset } = useDataset();
   const { guardarSubset } = useSubset();
 
+  // ✅ Verificar si el token guardado aún es válido
+  useEffect(() => {
+    const verificarToken = async () => {
+      const token = localStorage.getItem("google_token");
+      if (!token) return;
+
+      try {
+        const response = await fetch(`https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${token}`);
+        if (!response.ok) throw new Error("Token inválido o expirado");
+
+        const data = await response.json();
+        if (data.error) throw new Error(data.error);
+      } catch (error) {
+        console.warn("⛔ Token expirado o inválido. Eliminando...");
+        localStorage.removeItem("google_token");
+        setGoogleToken(null);
+      }
+    };
+
+    verificarToken();
+  }, []);
+
   // ✅ Guardar token automáticamente cuando se obtenga por primera vez
   useEffect(() => {
     if (authResponse?.access_token) {
@@ -49,7 +71,6 @@ export default function GoogleDrivePicker({ onDatasetInfo }) {
       showUploadFolders: false,
       supportDrives: true,
       multiselect: false,
-      // Esta llamada simplemente abrirá el picker y pedirá permiso
       callbackFunction: () => {},
     });
   };
@@ -60,13 +81,12 @@ export default function GoogleDrivePicker({ onDatasetInfo }) {
 
     if (!token) {
       alert("🔐 Debes iniciar sesión con Google antes de abrir el selector.");
-      handleLoginGoogle(); // abrir login automáticamente
+      handleLoginGoogle();
       return;
     }
 
     openPicker({
-      clientId:
-        "347987211299-iagoggoejqg5qttuv67aeko35k29melv.apps.googleusercontent.com",
+      clientId: "347987211299-iagoggoejqg5qttuv67aeko35k29melv.apps.googleusercontent.com",
       developerKey: "AIzaSyCjaBLF33iA0LqJuPmF-UUCp1cEu8ZCkr4",
       viewId: "DOCS",
       token,
@@ -85,6 +105,13 @@ export default function GoogleDrivePicker({ onDatasetInfo }) {
               headers: { Authorization: `Bearer ${token}` },
             });
 
+            if (response.status === 401) {
+              alert("⚠️ El token ha expirado. Vuelve a iniciar sesión.");
+              localStorage.removeItem("google_token");
+              setGoogleToken(null);
+              return;
+            }
+
             const jsonData = await response.json();
 
             if (!Array.isArray(jsonData)) {
@@ -96,11 +123,9 @@ export default function GoogleDrivePicker({ onDatasetInfo }) {
             setFileName(fileName);
             setDatasetProcesado(info);
 
-            // 💾 Guardar en localStorage
             localStorage.setItem("datasetProcesado", JSON.stringify(info));
             localStorage.setItem("datasetFileName", fileName);
 
-            // ✅ Guardar en contexto global
             guardarDataset(info.subset, info);
 
             if (onDatasetInfo) onDatasetInfo(info);
@@ -112,13 +137,11 @@ export default function GoogleDrivePicker({ onDatasetInfo }) {
     });
   };
 
-  // 🧭 Botón “Siguiente”
   const handleSiguiente = () => {
     if (!datasetProcesado) return;
     navigate("/MainEntrenamiento");
   };
 
-  // 🧾 Tabla
   const renderTable = (data) => {
     if (!data || data.length === 0) return <p>No hay datos para mostrar.</p>;
     const headers = Object.keys(data[0]);
@@ -188,7 +211,7 @@ export default function GoogleDrivePicker({ onDatasetInfo }) {
 // 🎨 Estilos
 const styles = {
   container: {
-background: "linear-gradient(90deg, #00796B 0%, #00BFA5 100%)",
+    background: "linear-gradient(90deg, #00796B 0%, #00BFA5 100%)",
     color: "#fff",
     padding: "20px",
     borderRadius: "10px",
@@ -215,19 +238,18 @@ background: "linear-gradient(90deg, #00796B 0%, #00BFA5 100%)",
     fontWeight: "bold",
     color: "#000",
   },
-nextButton: {
-  marginTop: "20px",
-  backgroundColor: "#fff",
-  border: "none",
-  borderRadius: "8px",
-  color: "#007282",
-  padding: "12px 20px",
-  fontSize: "16px",
-  fontWeight: "bold",
-  cursor: "pointer",
-  transition: "background 0.3s",
-},
-
+  nextButton: {
+    marginTop: "20px",
+    backgroundColor: "#fff",
+    border: "none",
+    borderRadius: "8px",
+    color: "#007282",
+    padding: "12px 20px",
+    fontSize: "16px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    transition: "background 0.3s",
+  },
   tableContainer: {
     marginTop: "20px",
     overflowX: "auto",
@@ -244,17 +266,16 @@ nextButton: {
     borderCollapse: "collapse",
     fontSize: "14px",
   },
-th: {
-  background: "linear-gradient(90deg, #00796B 100%)",
-  color: "white",
-  padding: "10px",
-  textAlign: "left",
-  borderBottom: "2px solid #2BD8FF",
-  position: "sticky",
-  top: 0,
-  zIndex: 2,
-},
-
+  th: {
+    background: "linear-gradient(90deg, #00796B 100%)",
+    color: "white",
+    padding: "10px",
+    textAlign: "left",
+    borderBottom: "2px solid #2BD8FF",
+    position: "sticky",
+    top: 0,
+    zIndex: 2,
+  },
   td: {
     borderBottom: "1px solid #ccc",
     padding: "8px",

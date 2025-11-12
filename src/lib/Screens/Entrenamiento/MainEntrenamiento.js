@@ -10,6 +10,14 @@ import BottomRight2 from "./Info";
 import GraficaError from "./GraficaError";
 import GraficaDisper from "./GraficaDisper";
 
+// 🔹 Importar los 6 cuadros
+import Cuadro1 from "./Cuadro1";
+import Cuadro2 from "./Cuadro2";
+import Cuadro3 from "./Cuadro3";
+import Cuadro4 from "./Cuadro4";
+import Cuadro5 from "./Cuadro5";
+import Cuadro6 from "./Cuadro6";
+
 export default function MainLayout() {
   const navigate = useNavigate();
   const [detalles, setDetalles] = useState(null);
@@ -20,7 +28,6 @@ export default function MainLayout() {
   const [mae, setMae] = useState(null);
   const [rmse, setRmse] = useState(null);
 
-  // 📸 Ref al contenedor principal
   const pantallaRef = useRef(null);
 
   const handleDetallesListos = (data) => {
@@ -38,36 +45,24 @@ export default function MainLayout() {
     navigate("/MainSimulacion");
   };
 
-  // 📸 Generar captura y exportar PDF
   const handleCapturarPDF = async () => {
     try {
       const elemento = pantallaRef.current;
       if (!elemento) return;
-
-      // 🔹 Capturar toda la sección visible como imagen
-      const canvas = await html2canvas(elemento, {
-        scale: 2, // mejora la resolución
-        useCORS: true, // permite imágenes externas
-      });
-
+      const canvas = await html2canvas(elemento, { scale: 2, useCORS: true });
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
       const imgWidth = 210;
       const pageHeight = 297;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
       let heightLeft = imgHeight;
       let position = 0;
-
-      // 🔹 Si la imagen es más grande que una página A4, la divide automáticamente
       while (heightLeft > 0) {
         pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
         if (heightLeft > 0) pdf.addPage();
         position = -pageHeight;
       }
-
-      // 🔸 Descargar PDF
       pdf.save("captura_entrenamiento.pdf");
     } catch (error) {
       console.error("❌ Error al generar el PDF:", error);
@@ -86,15 +81,30 @@ export default function MainLayout() {
         <div style={styles.bottomRight}>
           <BottomRight salidas={salidas} />
         </div>
+
         <div style={styles.bottomRight2}>
           <BottomRight2 eg={eg} mae={mae} rmse={rmse} converge={converge} />
         </div>
+
+        {/* 🔹 Gráfica de error */}
         <div style={styles.bottomGraficaError}>
           <GraficaError eg={eg} errorPermitido={errorPermitido} />
         </div>
+
+        {/* 🔹 Gráfica de dispersión */}
         <div style={styles.bottomGraficaDisper}>
           <GraficaDisper salidas={salidas} />
         </div>
+
+        {/* 🔹 6 Cuadros (2 columnas × 3 filas) */}
+        <Cuadro1 />
+        <Cuadro2 />
+        <Cuadro3 />
+        <Cuadro4 />
+        <Cuadro5 />
+        <Cuadro6 />
+
+        {/* 🔹 Matriz */}
         <div style={styles.bottomLeft}>
           <BottomLeft detalles={detalles} />
         </div>
@@ -120,6 +130,7 @@ const styles = {
     flexDirection: "column",
     width: "100%",
     overflowY: "auto",
+    fontStyle: "italic",
   },
   top: {
     flexShrink: 0,
@@ -133,10 +144,9 @@ const styles = {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
     gridAutoRows: "min-content",
-    gap: "2px",
-    padding: "4px",
+    gap: "6px",
+    padding: "8px",
     background: "#e7ecef",
-    overflow: "visible",
   },
   bottomRight: {
     gridColumn: "1 / 2",
@@ -159,25 +169,19 @@ const styles = {
     background: "#ffffff",
     borderRadius: "10px",
     padding: "10px",
-    overflowY: "auto",
-    maxHeight: "450px",
   },
   bottomGraficaDisper: {
     gridColumn: "2 / 3",
     background: "#ffffff",
     borderRadius: "10px",
     padding: "10px",
-    overflowY: "auto",
-    maxHeight: "450px",
   },
   bottomLeft: {
     gridColumn: "1 / span 2",
     background: "#ffffff",
     borderRadius: "10px",
     overflowY: "auto",
-    overflowX: "hidden",
     padding: "10px",
-    maxHeight: "300px",
   },
   buttonContainer: {
     textAlign: "center",
@@ -196,7 +200,6 @@ const styles = {
     border: "none",
     borderRadius: "8px",
     cursor: "pointer",
-    transition: "0.3s",
   },
   buttonCaptura: {
     backgroundColor: "#00b4d8",
@@ -207,6 +210,5 @@ const styles = {
     border: "none",
     borderRadius: "8px",
     cursor: "pointer",
-    transition: "0.3s",
   },
 };
