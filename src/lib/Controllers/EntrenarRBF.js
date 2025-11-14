@@ -83,7 +83,31 @@ export function entrenarRBF(dataset, numCentros, errorOptimo, updateRBF) {
 
   // 🔹 Estado de convergencia
   const converge = EG_Ajustado <= errorOptimo;
+  let Rendimiento_Positivo = 0;
+let Rendimiento_Negativo = 0;
 
+// Validar dataset y columna
+if (dataset.length > 0) {
+
+  // Detectar nombre exacto de la columna sin importar mayúsculas
+  const cols = Object.keys(dataset[7]);
+  const colIndicador = cols.find(c => c.toLowerCase() === "indicador");
+
+  if (colIndicador) {
+    const indicadores = dataset
+      .map(row => Number(row[colIndicador]))
+      .filter(v => !isNaN(v)); // elimina NaN
+
+    const suma = indicadores.reduce((a, b) => a + b, 0);
+    const cantidad = indicadores.length || 1;
+
+    const resultado = suma / cantidad;
+
+    Rendimiento_Positivo = resultado;
+    Rendimiento_Negativo = 100 - resultado;
+
+  }
+}
   // 💾 Guardar resultados en el contexto (si se pasa)
   if (typeof updateRBF === "function") {
     updateRBF({
@@ -99,13 +123,6 @@ export function entrenarRBF(dataset, numCentros, errorOptimo, updateRBF) {
     });
   }
 
-  console.log("💾 Guardado en contexto RBF:", {
-    numCentros,
-    errorOptimo,
-    centros,
-    pesos: W.valueOf(),
-  });
-
   return {
     entradas: numEntradas,
     patrones,
@@ -116,6 +133,8 @@ export function entrenarRBF(dataset, numCentros, errorOptimo, updateRBF) {
     converge,
     MAE,
     RMSE,
+    Rendimiento_Positivo,
+    Rendimiento_Negativo,
     EG: EG_Ajustado,
     detalles: {
       A: matrizPhi,

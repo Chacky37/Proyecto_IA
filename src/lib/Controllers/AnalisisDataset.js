@@ -14,7 +14,7 @@ export function analizarDataset(jsonData, guardarSubset) {
   // 🔍 Detectar columnas
   const columnas = Object.keys(subsetEntrenamiento[0]);
 
-  // 🧹 Detectar columnas numéricas
+  // 🔢 Detectar columnas numéricas (solamente para convertirlas)
   const columnasNumericas = columnas.filter((col) =>
     subsetEntrenamiento.every((row) => {
       const valor = row[col];
@@ -22,26 +22,41 @@ export function analizarDataset(jsonData, guardarSubset) {
     })
   );
 
-  // 📋 Detectar columnas eliminadas
-  const columnasEliminadas = columnas.filter(
-    (col) => !columnasNumericas.includes(col)
-  );
+  // ❌ Ya NO se eliminan columnas
+  const columnasEliminadas = []; // <- Siempre vacío
 
-  // 🧾 Crear subset limpio (solo numéricos)
+  // 🧾 Crear subset SIN eliminar columnas
   const subset = subsetEntrenamiento.map((row) => {
     const limpio = {};
-    columnasNumericas.forEach((col) => (limpio[col] = Number(row[col])));
+
+    columnas.forEach((col) => {
+      const valor = row[col];
+
+      if (columnasNumericas.includes(col)) {
+        limpio[col] = Number(valor);  // convertir numéricos
+      } else {
+        limpio[col] = valor;          // mantener texto
+      }
+    });
+
     return limpio;
   });
 
-  // 💾 Si se pasa guardarSubset desde el contexto, guardar el 20%
+  // 💾 Guardar subset del 20% si se solicita
   let registroExitoso = false;
 
   if (typeof guardarSubset === "function") {
     try {
       const subsetLimpioPrueba = subsetPrueba.map((row) => {
         const limpio = {};
-        columnasNumericas.forEach((col) => (limpio[col] = Number(row[col])));
+        columnas.forEach((col) => {
+          const valor = row[col];
+          if (columnasNumericas.includes(col)) {
+            limpio[col] = Number(valor);
+          } else {
+            limpio[col] = valor;
+          }
+        });
         return limpio;
       });
 
@@ -52,7 +67,6 @@ export function analizarDataset(jsonData, guardarSubset) {
         porcentaje: "20%",
       });
 
-      // ✅ Verificar si se guardó correctamente en localStorage
       const stored = localStorage.getItem("subset20");
       if (stored) registroExitoso = true;
     } catch (error) {
@@ -67,12 +81,11 @@ export function analizarDataset(jsonData, guardarSubset) {
     console.warn("⚠️ No se pudo guardar el subset");
   }
 
-  // 🧮 Cálculos de estructura
+  // 🧮 Cálculos de estructura (solo numéricos)
   const entradas = columnasNumericas.length - 1;
   const salidas = 1;
   const patrones = subset.length;
 
-  // 📤 Retornar resultado final
   return {
     entradas,
     salidas,

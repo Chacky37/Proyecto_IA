@@ -22,14 +22,15 @@ export default function TopSection({ onDetallesListos }) {
     }
 
     try {
+      // ⚙️ Ejecuta entrenamiento
       const info = entrenarRBF(
         dataset,
         parseInt(centros),
         parseFloat(errorPermitido),
         updateRBF
       );
-      console.log("✅ Resultado RBF:", info);
 
+      // 📤 Enviar los datos al componente padre o siguiente sección
       if (onDetallesListos) {
         onDetallesListos({
           detalles: info.detalles,
@@ -39,6 +40,8 @@ export default function TopSection({ onDetallesListos }) {
           converge: info.converge,
           mae: info.MAE,
           rmse: info.RMSE,
+          Rendimiento_Positivo: info.Rendimiento_Positivo, 
+          Rendimiento_Negativo: info.Rendimiento_Negativo,
         });
       }
     } catch (err) {

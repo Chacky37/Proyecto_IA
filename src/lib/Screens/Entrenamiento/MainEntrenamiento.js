@@ -15,7 +15,7 @@ import Cuadro1 from "./Cuadro1";
 import Cuadro2 from "./Cuadro2";
 import Cuadro3 from "./Cuadro3";
 import Cuadro4 from "./Cuadro4";
-import Cuadro5 from "./Cuadro5";
+import Cuadro5 from "./CuadroRendimientoGlobal";
 import Cuadro6 from "./Cuadro6";
 
 export default function MainLayout() {
@@ -27,6 +27,8 @@ export default function MainLayout() {
   const [converge, setConverge] = useState(false);
   const [mae, setMae] = useState(null);
   const [rmse, setRmse] = useState(null);
+  const [Rendimiento_Positivo, setRendimiento_Positivo] = useState(null);
+  const [Rendimiento_Negativo, setRendimiento_Negativo] = useState(null);
 
   const pantallaRef = useRef(null);
 
@@ -38,10 +40,12 @@ export default function MainLayout() {
     setConverge(data.converge);
     setMae(data.mae);
     setRmse(data.rmse);
+    setRendimiento_Positivo(data.Rendimiento_Positivo);
+    setRendimiento_Negativo(data.Rendimiento_Negativo);
   };
 
   const handleGuardar = () => {
-    console.log("Datos guardados:", { detalles, salidas, eg, mae, rmse });
+    console.log("Datos guardados:", { detalles, salidas, eg, mae, rmse, Rendimiento_Positivo, Rendimiento_Negativo});
     navigate("/MainSimulacion");
   };
 
@@ -101,7 +105,10 @@ export default function MainLayout() {
         <Cuadro2 />
         <Cuadro3 />
         <Cuadro4 />
-        <Cuadro5 />
+        <Cuadro5
+          positivo={Rendimiento_Positivo || 0}
+          negativo={Rendimiento_Negativo || 0}
+        />
         <Cuadro6 />
 
         {/* 🔹 Matriz */}
